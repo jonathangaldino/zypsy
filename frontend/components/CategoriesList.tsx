@@ -27,7 +27,6 @@ export function CategoriesList({
       {displayCategories.map((category) => (
         <Link
           href={`/?category=${category.id}`}
-          prefetch={true}
           onMouseEnter={() => handlePrefetchCategory(category.id)}
           key={category.id}
           className={`group flex items-center gap-2.5 rounded-full border-2 px-6 py-3 text-sm font-semibold transition-all duration-200 hover:shadow-md ${selectedCategory === category.id
@@ -38,6 +37,7 @@ export function CategoriesList({
           <span>{category.name}</span>
           <button
             onClick={(e) => {
+              e.preventDefault()
               e.stopPropagation()
               onToggleFavorite(category.id)
             }}
