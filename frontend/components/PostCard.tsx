@@ -41,7 +41,6 @@ export default function PostCard({ post }: PostCardProps) {
 }
 
 export function PostListSkeleton() {
-  // Varied widths for more natural appearance
   const titleWidths = ['w-full', 'w-5/6', 'w-4/5', 'w-full', 'w-11/12', 'w-5/6']
   const excerptLastLineWidths = ['w-3/4', 'w-4/5', 'w-2/3', 'w-5/6', 'w-3/5', 'w-4/5']
   const badgeCounts = [2, 3, 2, 3, 1, 2]
