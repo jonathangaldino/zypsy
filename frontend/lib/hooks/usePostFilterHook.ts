@@ -19,7 +19,7 @@ export function usePostFilter() {
     initialData: [] // better than undefined?
   })
 
-  const { data: posts, error: postsError, isLoading: postsIsLoading } = useQuery<unknown, Error, Awaited<ReturnType<typeof getPostsByCategoryId>>>({
+  const { data: posts, error: postsError, isLoading: postsIsLoading, isFetching: postsIsFetching } = useQuery<unknown, Error, Awaited<ReturnType<typeof getPostsByCategoryId>>>({
     queryKey: ["posts", `category=${selectedCategory}`],
     queryFn: async () => getPostsByCategoryId(selectedCategory!), // okay to use ! because of the option `enabled`
     enabled: selectedCategory !== null,
@@ -45,7 +45,6 @@ export function usePostFilter() {
 
   // Set<string> containing the Ids of the categories the user has favorited
   const favorites = useMemo(() => {
-    console.log("Recalculating favorites")
     if (!allCategories) return new Set<string>();
 
     return new Set(
@@ -111,7 +110,6 @@ export function usePostFilter() {
     return allCategories || []
   }, [showFavoritesOnly, allCategories, favorites])
 
-  console.log({ displayCategories, allCategories, favorites })
 
   return {
     selectedCategory,
@@ -122,7 +120,7 @@ export function usePostFilter() {
 
     // loading states:
     isLoadingCategories: isLoading,
-    isLoadingPosts: postsIsLoading,
+    isLoadingPosts: postsIsFetching,
 
     // data:
     allCategories: allCategories || [],
