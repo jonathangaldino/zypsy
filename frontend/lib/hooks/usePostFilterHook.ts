@@ -26,9 +26,7 @@ export function usePostFilter() {
     initialData: [] // better than undefined?
   })
 
-  // Prefetch posts by category
-  // When the user enters the category anchor - prefetch the post of this category
-  // This is to avoid the user seeing a blank screen for a few seconds
+  // Prefetch posts to prevent blank screen during category navigation
   const handlePrefetchCategory = (categoryId: string) => {
     const queryKey = ["posts", `category=${categoryId}`]
     const cachedData = queryClient.getQueryData(queryKey)
@@ -43,7 +41,7 @@ export function usePostFilter() {
     }
   }
 
-  // Set<string> containing the Ids of the categories the user has favorited
+  // IDs of favorited categories
   const favorites = useMemo(() => {
     if (!allCategories) return new Set<string>();
 
@@ -90,7 +88,6 @@ export function usePostFilter() {
     },
 
     onSuccess: (data, variables) => {
-      console.log("Mutation succeeded, updating with backend data", { data })
 
       // Update cached data with the actual response from backend
       queryClient.setQueryData<Category[]>(["categories"], (oldData) => {
@@ -114,7 +111,6 @@ export function usePostFilter() {
   }
 
   const filteredPosts = useMemo(() => {
-    console.log("Filtering posts", { showFavoritesOnly, selectedCategory, favorites, posts })
     if (!posts) return [];
 
     return posts.filter(post => {
@@ -127,8 +123,6 @@ export function usePostFilter() {
       return true
     })
   }, [posts, showFavoritesOnly, selectedCategory, favorites]);
-
-  console.log({ filteredPosts })
 
   const displayCategories = useMemo(() => {
     if (showFavoritesOnly) {

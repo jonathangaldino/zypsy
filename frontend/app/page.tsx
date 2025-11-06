@@ -82,8 +82,8 @@ function PostsPage() {
   )
 }
 
-// In an usual app, we usually have a wrapper components that provide state, context, and other
-// Sometimes, one in server side and other in client side
+// Wrapper component to provide React Query client
+// In a typical app, these are often split between server and client components
 export default function withQueryClient() {
   const queryClient = new QueryClient();
 
