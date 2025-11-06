@@ -41,27 +41,44 @@ export function usePostFilter() {
     }
   }
 
-  const [favorites, setFavorites] = useState<Set<string>>(new Set())
+  // Set<string> containing the Ids of the categories the user has favorited
+  const favorites = useMemo(() => {
+    console.log("Recalculating favorites")
+    if (!allCategories) return new Set<string>();
 
-  // Load favorites and selected category from localStorage on mount
-  useEffect(() => {
-    const savedFavorites = localStorage.getItem("favorites")
-    if (savedFavorites) {
-      setFavorites(new Set(JSON.parse(savedFavorites)))
-    }
+    return new Set(
+      allCategories.filter((category) => category.favorite)
+        .map((category) => category.id)
+    )
+  }, [allCategories])
 
-    const params = new URLSearchParams(window.location.search)
-    const categoryParam = params.get("category")
-    if (categoryParam) {
-      // setSelectedCategory(categoryParam)
-    }
-  }, [])
+  // Mutation for updating category favorite status in backend
+  const toggleFavoriteMutation = useMutation({
+    mutationFn: ({ categoryId, isFavorite }: { categoryId: string; isFavorite: boolean }) =>
+      updateCategory(categoryId, { favorite: isFavorite }),
+    onSuccess: (data, variables) => {
+      // Update cached date in useQuery
+      queryClient.setQueryData(["categories"], (oldData: Category[] | undefined) => {
+        if (!oldData) {
+          return oldData
+        }
 
+        // Return everything, except the category with the updated favorite status
+        const newData = oldData.map((category) => {
+          if (category.id === variables.categoryId) {
+            return {
+              ...category,
+              favorite: variables.isFavorite
+            }
+          }
+          return category
+        })
 
-  // Save favorites to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(Array.from(favorites)))
-  }, [favorites])
+        console.log("New state after triggering mutation", { oldData, newData })
+        return newData;
+      })
+    },
+  })
 
   const toggleFavorite = (categoryId: string) => {
     setFavorites((prev) => {
