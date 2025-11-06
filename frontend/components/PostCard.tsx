@@ -6,9 +6,10 @@ import { Badge } from "./ui/badge"
 
 type PostCardProps = {
   post: Post
+  categories: Category[]
 }
 
-export default function PostCard({ post }: PostCardProps) {
+export default function PostCard({ post, categories }: PostCardProps) {
   return (
     <Card
       key={post.id}
@@ -21,7 +22,7 @@ export default function PostCard({ post }: PostCardProps) {
         <p className="mt-5 flex-1 text-sm leading-relaxed text-muted-foreground text-pretty">{post.description}</p>
         <div className="mt-7 flex flex-wrap gap-2">
           {post.categories.map((catId) => {
-            const category = ([] as Category[]).find((c) => c.id === catId)
+            const category = categories.find((c) => c.id === catId)
 
             return (
               <Badge

@@ -63,6 +63,7 @@ function PostsPage() {
                 <PostCard
                   key={post.id}
                   post={post}
+                  categories={allCategories}
                 />
               ))}
             </div>
