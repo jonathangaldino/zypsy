@@ -11,13 +11,15 @@ interface CategoriesListProps {
   favorites: Set<string>
   onToggleFavorite: (categoryId: string) => void
   displayCategories: Category[]
+  handlePrefetchCategory: (categoryId: string) => void
 }
 
 export function CategoriesList({
   favorites,
   selectedCategory,
   onToggleFavorite,
-  displayCategories
+  displayCategories,
+  handlePrefetchCategory
 }: CategoriesListProps) {
 
   return (
@@ -25,6 +27,8 @@ export function CategoriesList({
       {displayCategories.map((category) => (
         <Link
           href={`/?category=${category.id}`}
+          prefetch={true}
+          onMouseEnter={() => handlePrefetchCategory(category.id)}
           key={category.id}
           className={`group flex items-center gap-2.5 rounded-full border-2 px-6 py-3 text-sm font-semibold transition-all duration-200 hover:shadow-md ${selectedCategory === category.id
             ? "border-primary bg-primary text-primary-foreground shadow-md scale-105"

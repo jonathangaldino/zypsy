@@ -9,7 +9,16 @@ import PostCard, { PostListSkeleton } from "@/components/PostCard"
 import { usePostFilter } from "@/lib/hooks/usePostFilterHook"
 
 function PostsPage() {
-  const { selectedCategory, allCategories, posts, displayCategories, showFavoritesOnly, favorites, filteredPosts, toggleFavorite, isLoadingCategories, isLoadingPosts } = usePostFilter()
+  const { selectedCategory,
+    allCategories,
+    displayCategories,
+    showFavoritesOnly,
+    favorites,
+    filteredPosts,
+    toggleFavorite,
+    isLoadingCategories,
+    isLoadingPosts,
+    handlePrefetchCategory } = usePostFilter()
 
   return (
     <div className="min-h-screen bg-background">
@@ -26,6 +35,7 @@ function PostsPage() {
             favorites={favorites}
             onToggleFavorite={toggleFavorite}
             selectedCategory={selectedCategory}
+            handlePrefetchCategory={handlePrefetchCategory}
           />
         </CategoriesFilter>
       )}

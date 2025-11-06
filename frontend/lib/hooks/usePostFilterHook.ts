@@ -1,10 +1,11 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { getCategories } from "../requests/getCategories"
 import { getPostsByCategoryId } from "../requests/getPostsByCategoryId"
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function usePostFilter() {
+  const queryClient = useQueryClient()
   const searchParams = useSearchParams();
   const selectedCategory: string | null = searchParams.get("category")
   const showFavoritesOnly: boolean = searchParams.get("favorites") === "true"
@@ -21,7 +22,22 @@ export function usePostFilter() {
     enabled: selectedCategory !== null
   })
 
-  console.log(posts)
+  // Prefetch posts by category
+  // When the user enters the category anchor - prefetch the post of this category
+  // This is to avoid the user seeing a blank screen for a few seconds
+  const handlePrefetchCategory = (categoryId: string) => {
+    const queryKey = ["posts", `category=${categoryId}`]
+    const cachedData = queryClient.getQueryData(queryKey)
+
+    // Only prefetch if not already cached
+    if (!cachedData) {
+      queryClient.prefetchQuery({
+        queryKey,
+        queryFn: () => getPostsByCategoryId(categoryId),
+        staleTime: 60 * 1000,
+      })
+    }
+  }
 
   const [favorites, setFavorites] = useState<Set<string>>(new Set())
 
@@ -85,5 +101,9 @@ export function usePostFilter() {
     allCategories: allCategories || [],
     posts: posts || [],
     displayCategories: displayCategories || [],
+
+
+    // prefetch functions:
+    handlePrefetchCategory
   }
 }
