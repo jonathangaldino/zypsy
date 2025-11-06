@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import Header from "@/components/Header"
 import { CategoriesFilter, CategoriesFilterSkeleton } from "@/components/CategoriesFilter"
 import { CategoriesList } from "@/components/CategoriesList"
-import PostCard from "@/components/PostCard"
+import PostCard, { PostListSkeleton } from "@/components/PostCard"
 import { usePostFilter } from "@/lib/hooks/usePostFilterHook"
 
 function PostsPage() {
@@ -33,8 +33,7 @@ function PostsPage() {
       {/* Posts */}
       <main className="container mx-auto px-6 py-12 md:py-16">
         {isLoadingPosts ? (
-          <>
-          </>
+          <PostListSkeleton />
         ) : (
           <>
             <div className="mb-10">

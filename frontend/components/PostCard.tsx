@@ -38,6 +38,40 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
       </div>
     </Card>
+  )
+}
 
+export function PostListSkeleton() {
+  return (
+    <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <Card key={i} className="flex flex-col overflow-hidden border-2">
+          <div className="flex flex-1 flex-col p-7">
+            {/* Date skeleton */}
+            <div className="h-3 w-32 animate-pulse rounded bg-muted" />
+
+            {/* Title skeleton */}
+            <div className="mt-4 space-y-2">
+              <div className="h-7 w-full animate-pulse rounded bg-muted" />
+              <div className="h-7 w-3/4 animate-pulse rounded bg-muted" />
+            </div>
+
+            {/* Excerpt skeleton */}
+            <div className="mt-5 flex-1 space-y-2">
+              <div className="h-4 w-full animate-pulse rounded bg-muted" />
+              <div className="h-4 w-full animate-pulse rounded bg-muted" />
+              <div className="h-4 w-5/6 animate-pulse rounded bg-muted" />
+            </div>
+
+            {/* Category badges skeleton */}
+            <div className="mt-7 flex flex-wrap gap-2">
+              <div className="h-6 w-20 animate-pulse rounded-full bg-muted" />
+              <div className="h-6 w-24 animate-pulse rounded-full bg-muted" />
+              <div className="h-6 w-16 animate-pulse rounded-full bg-muted" />
+            </div>
+          </div>
+        </Card>
+      ))}
+    </div>
   )
 }
