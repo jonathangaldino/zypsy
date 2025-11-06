@@ -1,8 +1,10 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query"
 import { getCategories } from "../requests/getCategories"
 import { getPostsByCategoryId } from "../requests/getPostsByCategoryId"
+import { updateCategory } from "../requests/updateCategory"
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Category } from "../types";
 
 export function usePostFilter() {
   const queryClient = useQueryClient()
@@ -81,15 +83,8 @@ export function usePostFilter() {
   })
 
   const toggleFavorite = (categoryId: string) => {
-    setFavorites((prev) => {
-      const newFavorites = new Set(prev)
-      if (newFavorites.has(categoryId)) {
-        newFavorites.delete(categoryId)
-      } else {
-        newFavorites.add(categoryId)
-      }
-      return newFavorites
-    })
+    const isFavorite = !favorites.has(categoryId)
+    toggleFavoriteMutation.mutate({ categoryId, isFavorite })
   }
 
   // Filter posts based on selected category or favorites
@@ -103,7 +98,15 @@ export function usePostFilter() {
     return true
   })
 
-  const displayCategories = showFavoritesOnly ? (allCategories ?? []).filter((cat) => favorites.has(cat.id)) : (allCategories || [])
+  const displayCategories = useMemo(() => {
+    if (showFavoritesOnly) {
+      return (allCategories ?? []).filter(c => favorites.has(c.id))
+    }
+
+    return allCategories || []
+  }, [showFavoritesOnly, allCategories, favorites])
+
+  console.log({ displayCategories, allCategories, favorites })
 
   return {
     selectedCategory,
