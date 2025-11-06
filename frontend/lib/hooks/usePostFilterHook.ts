@@ -13,13 +13,15 @@ export function usePostFilter() {
   // Requests:
   const { data: allCategories, error, isLoading } = useQuery<unknown, Error, Awaited<ReturnType<typeof getCategories>>>({
     queryKey: ["categories"],
-    queryFn: async () => getCategories()
+    queryFn: async () => getCategories(),
+    initialData: [] // better than undefined?
   })
 
   const { data: posts, error: postsError, isLoading: postsIsLoading } = useQuery<unknown, Error, Awaited<ReturnType<typeof getPostsByCategoryId>>>({
     queryKey: ["posts", `category=${selectedCategory}`],
     queryFn: async () => getPostsByCategoryId(selectedCategory!), // okay to use ! because of the option `enabled`
-    enabled: selectedCategory !== null
+    enabled: selectedCategory !== null,
+    initialData: [] // better than undefined?
   })
 
   // Prefetch posts by category
