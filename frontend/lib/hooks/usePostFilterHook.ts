@@ -57,34 +57,62 @@ export function usePostFilter() {
   const toggleFavoriteMutation = useMutation({
     mutationFn: ({ categoryId, isFavorite }: { categoryId: string; isFavorite: boolean }) =>
       updateCategory(categoryId, { favorite: isFavorite }),
+
+    // OPTIMISTIC UPDATE - runs immediately before the request
+    onMutate: async ({ categoryId, isFavorite }) => {
+      // Cancel any outgoing refetches to prevent them from overwriting our optimistic update
+      await queryClient.cancelQueries({ queryKey: ["categories"] })
+
+      // Snapshot the previous value for rollback
+      const previousCategories = queryClient.getQueryData<Category[]>(["categories"])
+
+      // Optimistically update the cache
+      queryClient.setQueryData<Category[]>(["categories"], (oldData) => {
+        if (!oldData) return oldData
+
+        return oldData.map((category) =>
+          category.id === categoryId
+            ? { ...category, favorite: isFavorite }
+            : category
+        )
+      })
+
+      // Return context with the snapshot for rollback
+      return { previousCategories }
+    },
+
+    onError: (err, variables, context) => {
+
+      // Rollback to the previous state
+      if (context?.previousCategories) {
+        queryClient.setQueryData(["categories"], context.previousCategories)
+      }
+    },
+
     onSuccess: (data, variables) => {
-      // Update cached date in useQuery
-      queryClient.setQueryData(["categories"], (oldData: Category[] | undefined) => {
-        if (!oldData) {
-          return oldData
-        }
+      console.log("Mutation succeeded, updating with backend data", { data })
 
-        // Return everything, except the category with the updated favorite status
-        const newData = oldData.map((category) => {
-          if (category.id === variables.categoryId) {
-            return {
-              ...category,
-              favorite: variables.isFavorite
-            }
-          }
-          return category
-        })
+      // Update cached data with the actual response from backend
+      queryClient.setQueryData<Category[]>(["categories"], (oldData) => {
+        if (!oldData) return oldData
 
-        console.log("New state after triggering mutation", { oldData, newData })
-        return newData;
+        // Replace the category with the actual backend response
+        return oldData.map((category) =>
+          category.id === data.id ? data : category
+        )
       })
     },
+
+    onSettled: () => {
+      // Optionally invalidate to ensure consistency with backend
+    }
   })
 
   const toggleFavorite = (categoryId: string) => {
     const isFavorite = !favorites.has(categoryId)
     toggleFavoriteMutation.mutate({ categoryId, isFavorite })
   }
+
   const filteredPosts = useMemo(() => {
     console.log("Filtering posts", { showFavoritesOnly, selectedCategory, favorites, posts })
     if (!posts) return [];

@@ -27,8 +27,10 @@ function PostsPage() {
       {isLoadingCategories ? (
         <CategoriesFilterSkeleton />
       ) : (
-        <CategoriesFilter>
-
+        <CategoriesFilter
+          showFavoritesOnly={showFavoritesOnly}
+          selectedCategory={selectedCategory}
+        >
           <CategoriesList
             displayCategories={displayCategories}
             categories={allCategories}

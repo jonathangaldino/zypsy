@@ -6,11 +6,17 @@ import Link from "next/link"
 
 interface CategoriesFilterProps {
   children: ReactNode
+  showFavoritesOnly: boolean
+  selectedCategory: string | null
 }
 
 export function CategoriesFilter({
   children,
+  showFavoritesOnly,
+  selectedCategory,
 }: CategoriesFilterProps) {
+  // "All categories" is active when not in favorites mode and no category is selected
+  const isAllCategoriesActive = !showFavoritesOnly && !selectedCategory
 
   return (
     <>
@@ -19,15 +25,22 @@ export function CategoriesFilter({
           <div className="flex flex-wrap gap-3">
             <Link
               href="/"
-              className="rounded-full px-6 font-medium transition-all hover:scale-105"
+              className={`rounded-full border-2 px-6 py-2.5 font-semibold text-sm transition-all duration-200 hover:scale-105 ${
+                isAllCategoriesActive
+                  ? "border-primary bg-primary text-primary-foreground shadow-md"
+                  : "border-transparent bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
             >
               All categories
             </Link>
 
             <Link
               href="/?favorites=true"
-              // variant={showFavoritesOnly ? "default" : "ghost"}
-              className="rounded-full px-6 font-medium transition-all hover:scale-105"
+              className={`rounded-full border-2 px-6 py-2.5 font-semibold text-sm transition-all duration-200 hover:scale-105 ${
+                showFavoritesOnly
+                  ? "border-primary bg-primary text-primary-foreground shadow-md"
+                  : "border-transparent bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground"
+              }`}
             >
               Favorite categories
             </Link>
