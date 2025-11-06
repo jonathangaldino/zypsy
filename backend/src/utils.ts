@@ -101,8 +101,9 @@ export const createCrudRoute = (
         throw new Error('Not found');
       }
       const updatedItem = {
-        id: request.params.id,
+        ...items[index],
         ...request.body,
+        id: request.params.id,
       };
       items[index] = updatedItem;
       await setCollection(collectionName as any, items);
