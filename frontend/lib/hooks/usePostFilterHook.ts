@@ -86,17 +86,22 @@ export function usePostFilter() {
     const isFavorite = !favorites.has(categoryId)
     toggleFavoriteMutation.mutate({ categoryId, isFavorite })
   }
+  const filteredPosts = useMemo(() => {
+    console.log("Filtering posts", { showFavoritesOnly, selectedCategory, favorites, posts })
+    if (!posts) return [];
 
-  // Filter posts based on selected category or favorites
-  const filteredPosts = (posts ?? []).filter((post) => {
-    if (showFavoritesOnly) {
-      return post.categories.some((cat) => favorites.has(cat))
-    }
-    if (selectedCategory) {
-      return post.categories.includes(selectedCategory)
-    }
-    return true
-  })
+    return posts.filter(post => {
+      if (showFavoritesOnly) {
+        return post.categories.some((cat) => favorites.has(cat))
+      }
+      if (selectedCategory) {
+        return post.categories.includes(selectedCategory)
+      }
+      return true
+    })
+  }, [posts, showFavoritesOnly, selectedCategory, favorites]);
+
+  console.log({ filteredPosts })
 
   const displayCategories = useMemo(() => {
     if (showFavoritesOnly) {
