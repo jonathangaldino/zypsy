@@ -12,6 +12,7 @@ interface CategoriesListProps {
   onToggleFavorite: (categoryId: string) => void
   displayCategories: Category[]
   handlePrefetchCategory: (categoryId: string) => void
+  showFavoritesOnly: boolean
 }
 
 export function CategoriesList({
@@ -19,14 +20,15 @@ export function CategoriesList({
   selectedCategory,
   onToggleFavorite,
   displayCategories,
-  handlePrefetchCategory
+  handlePrefetchCategory,
+  showFavoritesOnly
 }: CategoriesListProps) {
 
   return (
     <div className="flex flex-wrap gap-3">
       {displayCategories.map((category) => (
         <Link
-          href={`/?category=${category.id}`}
+          href={showFavoritesOnly ? `/?favorites=true&category=${category.id}` : `/?category=${category.id}`}
           onMouseEnter={() => handlePrefetchCategory(category.id)}
           key={category.id}
           className={`group flex items-center gap-2.5 rounded-full border-2 px-6 py-3 text-sm font-semibold transition-all duration-200 hover:shadow-md ${selectedCategory === category.id

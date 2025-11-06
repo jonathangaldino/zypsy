@@ -38,6 +38,7 @@ function PostsPage() {
             onToggleFavorite={toggleFavorite}
             selectedCategory={selectedCategory}
             handlePrefetchCategory={handlePrefetchCategory}
+            showFavoritesOnly={showFavoritesOnly}
           />
         </CategoriesFilter>
       )}
