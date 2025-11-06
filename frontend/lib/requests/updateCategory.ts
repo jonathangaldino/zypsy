@@ -40,7 +40,7 @@ export async function updateCategory(
   }
 
   // Simulate network latency for development
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  //await new Promise((resolve) => setTimeout(resolve, 1000));
 
   return validatedData;
 }

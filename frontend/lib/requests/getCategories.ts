@@ -27,7 +27,7 @@ export async function getCategories(): Promise<Array<Category>> {
   }
 
   // Simulate network latency for development
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
 
   return data;
 }
