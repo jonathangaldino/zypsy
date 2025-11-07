@@ -6,6 +6,7 @@ import Header from "@/components/Header"
 import { CategoriesFilter, CategoriesFilterSkeleton } from "@/components/CategoriesFilter"
 import { CategoriesList } from "@/components/CategoriesList"
 import PostCard, { PostListSkeleton } from "@/components/PostCard"
+import { CreatePostDialog } from "@/components/CreatePostDialog"
 import { usePostFilter } from "@/lib/hooks/usePostFilterHook"
 
 function PostsPage() {
@@ -49,13 +50,21 @@ function PostsPage() {
           <PostListSkeleton />
         ) : (
           <>
-            <div className="mb-10">
+            <div className="mb-10 flex items-center justify-between">
+              <div>
+                {selectedCategory && (
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Found {filteredPosts.length} post{filteredPosts.length !== 1 ? "s" : ""}
+                    {selectedCategory && ` in "${(allCategories).find((c) => c.id === selectedCategory)?.name}"`}
+                    {showFavoritesOnly && " in favorite categories"}
+                  </p>
+                )}
+              </div>
               {selectedCategory && (
-                <p className="text-sm font-medium text-muted-foreground">
-                  Found {filteredPosts.length} post{filteredPosts.length !== 1 ? "s" : ""}
-                  {selectedCategory && ` in "${(allCategories).find((c) => c.id === selectedCategory)?.name}"`}
-                  {showFavoritesOnly && " in favorite categories"}
-                </p>
+                <CreatePostDialog
+                  categories={allCategories}
+                  selectedCategory={selectedCategory}
+                />
               )}
             </div>
 
