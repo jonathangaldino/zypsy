@@ -18,6 +18,7 @@ TailwindCSS - For styling.
 
 ## Frontend
 
+- Changed the design a bit. I wanted to show how I handle UI/UX. I'm not that creative though.
 - Added the ability to create posts.
 - Added the ability to create categories.
 - Optimistic UI techniques applied when *toggling* favorite status.
@@ -34,3 +35,7 @@ The main reason for this is that I wanted to keep the state of the app in sync w
 We have a custom hook that returns some data for the `Page.tsx` - which later propagates to some rendering components.
 I like this approach but I don't usually use it in other projects. It really depends on the component tree and logic.
 I find it acceptable to drill props from one to, at most, two levels deep. After that, I go to Zustand.
+
+## Tests
+
+Yeah, I should've added tests. However, setting up cypress (or equivalent frameworks for e2e) takes a bit of time.
