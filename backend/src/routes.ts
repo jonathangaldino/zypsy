@@ -100,16 +100,6 @@ const createPostRoute: CrudRoute = {
       throw new Error('Invalid date value');
     }
 
-    // Verify the date string matches the parsed date (prevents dates like 2024-02-31 becoming 2024-03-03)
-    const [year, month, day] = request.body.date.split('-').map(Number);
-    if (
-      parsedDate.getFullYear() !== year ||
-      parsedDate.getMonth() !== month - 1 ||
-      parsedDate.getDate() !== day
-    ) {
-      throw new Error('Invalid date value. Date does not exist (e.g., 2024-02-31)');
-    }
-
     // Verify category exists
     const categories = await getCollection('categories');
     const categoryExists = categories.some((cat) => cat.id === categoryId);
